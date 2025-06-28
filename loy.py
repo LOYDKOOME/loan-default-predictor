@@ -6,7 +6,17 @@ from PIL import Image
 import pickle
 
 
-model = pickle.load(open('loan.pkl', 'rb'))
+def xor_bytes(data: bytes, key: int) -> bytes:
+    return bytes([b ^ key for b in data])
+
+key = 123  # Use the same key you used during encryption
+
+with open('loan_obfuscated.pkl', 'rb') as f:
+    encrypted_data = f.read()
+
+decrypted_data = xor_bytes(encrypted_data, key)
+model = pickle.loads(decrypted_data)
+
 
 def run():
     img1 = Image.open('bank.png')
